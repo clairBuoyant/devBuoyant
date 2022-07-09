@@ -50,7 +50,7 @@ services:
     command: python server/main.py
     tty: true
     volumes:
-      - .:/backend/server:cached
+      - ./server/server:/backend/server:cached
       - ./.docker/.ipython:/.ipython:cached
     environment:
       DATABASE_URL: "postgresql+asyncpg://${postgres_user:-postgres}:${postgres_password:-postgres}@postgres:5432/${postgres_user:-postgres}"

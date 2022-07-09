@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build stack with docker-compose
+        run: ./scripts/build.sh
+      # TODO: incorporate test execution to confirm build and seed process
+      # - name: Run API tests
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      #     PYTHON_ENV: ${{ secrets.PYTHON_ENV }}
+      #     PYTHONPATH: $PYTHONPATH:.
+      #   # TODO: incorporate coverage reporting
+      #   run: |
+      #     poetry run pytest

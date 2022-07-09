@@ -22,5 +22,6 @@ docker-compose run --rm backend alembic upgrade head
 # Create initial data
 docker-compose run --rm backend python3 server/seed_initial_data.py
 
-# Uncomment to load geodata (WIP)
+# TODO: uncomment after MVP to incorporate global data
+# Load geodata
 # docker-compose run --rm / ./db_scripts/load_geodata.sh

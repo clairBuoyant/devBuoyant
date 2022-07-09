@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": "file:///Users/kylejb/Dev/clairBuoyant/devBuoyant/.github/workflows/build.yml"
+    }
+}

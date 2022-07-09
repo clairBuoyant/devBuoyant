@@ -1,6 +1,3 @@
-[submodule "server"]
-	path = server
-	url = git@github.com:clairBuoyant/server.git
 [submodule "web"]
 	path = web
 	url = git@github.com:clairBuoyant/web.git

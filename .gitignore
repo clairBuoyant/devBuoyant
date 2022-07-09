@@ -1,0 +1,10 @@
+## Environment
+*.env
+.env.*
+.venv
+
+## Misc
+.DS_Store
+.idea
+.idea_modules
+.vscode

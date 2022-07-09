@@ -50,11 +50,12 @@ services:
     command: python server/main.py
     tty: true
     volumes:
-      - ./server/server:/backend/server/:cached
-      - ./.docker/.ipython:/root/.ipython:cached
+      - .:/backend/server:cached
+      - ./.docker/.ipython:/.ipython:cached
     environment:
-      PYTHONPATH: .
       DATABASE_URL: "postgresql+asyncpg://${postgres_user:-postgres}:${postgres_password:-postgres}@postgres:5432/${postgres_user:-postgres}"
+      PYTHON_ENV: development
+      PYTHONPATH: $PYTHONPATH:.
     depends_on:
       - "postgres"
 

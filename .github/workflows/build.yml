@@ -1,0 +1,49 @@
+
+# env:
+  # DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  # DJANGO_SETTINGS_MODULE: app_name.settings.dev
+  # SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  # PORT: 8000
+  # PG_DB: ${{ secrets.PG_DB }}
+  # PG_PASS: ${{ secrets.PG_PASS }}
+  # PG_USER: ${{ secrets.USER }}
+
+# steps:
+# - uses: actions/checkout@v1
+# - name: Build the docker-compose stack
+# run: docker-compose up -d
+# - name: Sleep
+# uses: jakejarvis/wait-action@master
+# with:
+# time: '60s'
+# - name: Check running containers
+# run: docker ps
+# - name: Run test suite
+# run: docker exec backend pytest --skip-auth
+
+name: Build
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build stack with docker-compose
+        run: ./scripts/build.sh
+      # TODO: incorporate test execution to confirm build and seed process
+      # - name: Run API tests
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      #     PYTHON_ENV: ${{ secrets.PYTHON_ENV }}
+      #     PYTHONPATH: $PYTHONPATH:.
+      #   # TODO: incorporate coverage reporting
+      #   run: |
+      #     poetry run pytest

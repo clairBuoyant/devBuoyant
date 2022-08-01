@@ -1,10 +1,10 @@
-version: "3.8"
+version: "3.9"
 services:
   nginx:
     container_name: devbuoyant-nginx
     image: nginx
     volumes:
-      - ./server/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "${WEB_PORT:-8000}:80"
     depends_on:
@@ -26,7 +26,7 @@ services:
       POSTGRES_USER: ${postgres_user:-postgres}
       POSTGRES_PASSWORD: ${postgres_password:-postgres}
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - ./scripts/load_geodata.sh:/db_scripts/load_geodata.sh/:cached # TODO: move script to server process
       - db-data:/var/lib/postgresql/data:cached
@@ -57,7 +57,7 @@ services:
       PYTHON_ENV: development
       PYTHONPATH: $PYTHONPATH:.
     depends_on:
-      - "postgres"
+      - postgres
 
   web:
     container_name: devbuoyant-web

@@ -1,9 +1,25 @@
 #!/bin/sh -e
 
-# TODO: generate random env values for local development
+function random_password () {
+    date +%s | sha256sum | base64 | head -c 32 ; echo
+}
+function set_username () {
+    whoami
+}
+
+# TODO: guard for GitHub Actions
+if [ ! -f server/.env ]
+then
+    touch server/.env
+    echo "POSTGRES_DB=devbuoyant" >> server/.env
+    echo "POSTGRES_PASSWORD=$(random_password)" >> server/.env
+    echo "POSTGRES_USER=$(set_username)" >> server/.env
+    echo "DATABASE_URL=postgresql+asyncpg://$(set_username):$(random_password)@localhost:5432/clairbuoyant" >> server/.env
+    echo "PYTHON_ENV=development" >> server/.env
+fi
 
 # Build and run containers
-docker-compose up -d
+COMPOSE_PROJECT_NAME=devbuoyant docker-compose --env-file server/.env up -d
 
 # Hack to wait for postgres container to be up before running alembic migrations
 sleep 10;

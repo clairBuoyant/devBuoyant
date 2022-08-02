@@ -23,8 +23,9 @@ services:
     image: postgis/postgis
     restart: always
     environment:
-      POSTGRES_USER: ${postgres_user:-postgres}
-      POSTGRES_PASSWORD: ${postgres_password:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - 5432:5432
     volumes:
@@ -47,17 +48,17 @@ services:
       context: server
       dockerfile: Dockerfile
       target: development
-    command: python server/main.py
     tty: true
     volumes:
       - ./server/server:/backend/server:cached
       - ./.docker/.ipython:/.ipython:cached
     environment:
-      DATABASE_URL: "postgresql+asyncpg://${postgres_user:-postgres}:${postgres_password:-postgres}@postgres:5432/${postgres_user:-postgres}"
+      DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
       PYTHON_ENV: development
       PYTHONPATH: $PYTHONPATH:.
     depends_on:
       - postgres
+      - redis
 
   web:
     container_name: devbuoyant-web
@@ -69,7 +70,7 @@ services:
       - ./web:/web:cached
       - ./web/node_modules:/web/node_modules:cached
     environment:
-      - NODE_ENV=development
+      NODE_ENV: ${NODE_ENV:-development}
 
 volumes:
   db-data:

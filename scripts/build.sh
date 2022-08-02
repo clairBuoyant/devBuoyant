@@ -1,9 +1,9 @@
 #!/bin/sh -e
 
-function random_password () {
+random_password () {
     date +%s | sha256sum | base64 | head -c 32 ; echo
 }
-function set_username () {
+set_username () {
     whoami
 }
 

@@ -8,6 +8,7 @@ set_username () {
 }
 
 # TODO: guard for GitHub Actions
+# how to handle setting .env in github actions and sharing creds
 if [ ! -f server/.env ]
 then
     touch server/.env
@@ -18,8 +19,13 @@ then
     echo "PYTHON_ENV=development" >> server/.env
 fi
 
+# LOAD ENV VARIABLES
+if [ -f server/.env ]; then
+    export $(echo $(cat server/.env | sed 's/#.*//g'| xargs) | envsubst)
+fi
+
 # Build and run containers
-COMPOSE_PROJECT_NAME=devbuoyant docker-compose --env-file server/.env up -d
+COMPOSE_PROJECT_NAME=devbuoyant docker-compose up -d
 
 # Hack to wait for postgres container to be up before running alembic migrations
 sleep 10;

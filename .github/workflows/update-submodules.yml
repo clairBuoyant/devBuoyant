@@ -1,0 +1,38 @@
+name: update-submodules
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * 5'
+jobs:
+  open_pull_request:
+    if: github.repository == 'clairBuoyant/devBuoyant'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout recursively
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Configure git
+        run: |
+          git config user.name 'SubmodulesBot'
+          git config user.email 'noreply@clairbuoyant.live'
+      - name: Update submodules
+        run: |
+          git submodule update --recursive --remote
+      - name: Check for changes
+        run: |
+          echo "NUM_OF_CHANGES=$(git status --short | wc -l)" >> $GITHUB_ENV
+          echo "BRANCH_NAME=chore/submodules-update-$(date '+%Y%m%d%H%M')" >> $GITHUB_ENV
+      - name: Create new branch, commit update and push it
+        if: env.NUM_OF_CHANGES != '0'
+        run: |
+          git checkout -b $BRANCH_NAME
+          git add .
+          git commit -m "chore: submodules update"
+          git push -u origin $BRANCH_NAME
+      - name: Open pull request
+        if: env.NUM_OF_CHANGES != '0'
+        run: |
+          gh pr create --fill
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,7 +2,7 @@ name: update-submodules
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 9 * * 5'
+    - cron: '0 9 * * 1,5'
 jobs:
   open_pull_request:
     if: github.repository == 'clairBuoyant/devBuoyant'
@@ -35,4 +35,4 @@ jobs:
         run: |
           gh pr create --fill
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHT }}
